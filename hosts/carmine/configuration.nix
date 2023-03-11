@@ -4,6 +4,8 @@
   imports = [
       # Set default locale
       ../../crumbs/locale.nix
+      # Include desktop
+      ../../crumbs/desktop.nix
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
       impermanence.nixosModule
