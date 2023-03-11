@@ -18,12 +18,12 @@
     };
 
   fileSystems."/boot/" ={
-    device = "/dev/disk/by-uuid/EE0B-FBC3";
+    device = "/dev/disk/by-partlabel/nixos-boot";
     fsType = "vfat";
   };
 
   fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/9a74b94b-55b6-46e2-85f1-51127b35296b";
+    device = "/dev/disk/by-partlabel/nixos";
     fsType = "ext4";
   };
 
