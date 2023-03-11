@@ -17,7 +17,7 @@
     options = [ "defaults" "mode=0755" "size=256M" ];
   };
 
-  fileSystems."/boot/" = {
+  fileSystems."/boot" = {
     device = "/dev/disk/by-partlabel/nixos-boot";
     fsType = "vfat";
   };
