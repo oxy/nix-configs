@@ -12,10 +12,10 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
-      device = "none";
-      fsType = "tmpfs";
-      options = [ "defaults" "mode=0755" "size=256M" ]
-    };
+    device = "none";
+    fsType = "tmpfs";
+    options = [ "defaults" "mode=0755" "size=256M" ];
+  };
 
   fileSystems."/boot/" ={
     device = "/dev/disk/by-partlabel/nixos-boot";
