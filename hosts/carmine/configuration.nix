@@ -6,7 +6,7 @@
       ../../crumbs/locale.nix
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ${impermanence}/nixos.nix
+      impermanence.nixosModule
     ];
 
   nix.allowedUsers = [ "@wheel" ];
