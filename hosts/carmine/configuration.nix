@@ -34,7 +34,9 @@
     packages = with pkgs; [
       firefox
     ];
-    openssh.authorizedKeys.keyFiles = [ (fetchKeys "oxy") ];
+    openssh.authorizedKeys.keyFiles = [ 
+      ../../pubkeys/oxy/scarlet.pub
+    ];
   };
 
   # Allow unfree packages
