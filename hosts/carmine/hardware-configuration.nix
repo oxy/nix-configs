@@ -17,7 +17,7 @@
     options = [ "defaults" "mode=0755" "size=256M" ];
   };
 
-  fileSystems."/boot/" ={
+  fileSystems."/boot/" = {
     device = "/dev/disk/by-partlabel/nixos-boot";
     fsType = "vfat";
   };
@@ -27,13 +27,13 @@
     fsType = "ext4";
   };
 
-  fileSystems."/etc/nixos" {
+  fileSystems."/etc/nixos" = {
     device = " /nix/persist/etc/nixos";
     fsType = "none";
     options = [ "bind" ];
   };
     
-  fileSystems."/var/log" {
+  fileSystems."/var/log" = {
     device = " /nix/persist/var/log";
     fsType = "none";
     options = [ "bind" ];
