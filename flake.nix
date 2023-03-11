@@ -3,9 +3,9 @@
   inputs.impermanence.url = "github:nix-community/impermanence";
 
   outputs = { self, nixpkgs, ... }@attrs : {
-    nixosConfigurations.simple = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.carmine = nixpkgs.lib.nixosSystem {
       system = "aarch64-linux";
-      modules = [ ./hosts/simple/configuration.nix ];
+      modules = [ ./hosts/carmine/configuration.nix ];
     };
   };
 }
