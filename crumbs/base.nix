@@ -31,7 +31,7 @@
   fileSystems."/srv".options = [ "noexec" ];
   fileSystems."/var/log".options = [ "noexec" ];
 
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
     git  # needed to update flake in /etc/nixos
   ];
 
