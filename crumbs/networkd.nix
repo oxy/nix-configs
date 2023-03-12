@@ -13,7 +13,7 @@
     };
   in {
     "40-wired" = {
-      enable = "true";
+      enable = true;
       name = "en*";
       inherit networkConfig;
     };

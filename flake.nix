@@ -1,5 +1,5 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
   inputs.impermanence.url = "github:nix-community/impermanence";
 
   # XXX: use this ONLY for hashed passwords
