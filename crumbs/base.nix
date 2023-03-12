@@ -11,6 +11,7 @@
   nix.settings.extra-sandbox-paths = [
     "/nix/persist/secrets"
   ];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.persistence."/nix/persist" = {
     hideMounts = true;
