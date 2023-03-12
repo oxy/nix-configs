@@ -17,6 +17,6 @@
       enable = "true";
       name = "en*";
       inherit networkConfig;
-    }
+    };
   };
 }
