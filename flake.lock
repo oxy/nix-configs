@@ -41,11 +41,11 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1678592106,
-        "narHash": "sha256-gBFtriQF/+/5OOhLd/pHVaLKJ5mD5OehBLGNi3nPsuE=",
+        "lastModified": 1678598354,
+        "narHash": "sha256-QVwDs43ocqQSO+dIYQowOLmdD+Sq3gOHd3fXTqnYDIk=",
         "owner": "oxy",
         "repo": "nix-secrets",
-        "rev": "b3ed207a5ec0b4caf3b80ae5a70d611d590c9c5d",
+        "rev": "6edcc8c6472939420719a86c37f2c4fade154895",
         "type": "github"
       },
       "original": {
