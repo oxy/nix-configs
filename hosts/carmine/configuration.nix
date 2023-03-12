@@ -23,6 +23,10 @@
   boot.loader.efi.efiSysMountPoint = "/boot";
 
   users.users.oxy.hashedPassword = lib.fileContents "${secrets}/carmine/oxy.pwd";
+  users.users.root.openssh.authorizedKeys.keyFiles = [ 
+    ../../pubkeys/oxy/scarlet.pub
+  ];
+
   # allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
