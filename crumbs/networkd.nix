@@ -3,7 +3,6 @@
 {
   # networking
   networking = {
-    hostname = "carmine";
     useDHCP = false;
     useNetworkd = true;
   };
