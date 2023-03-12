@@ -8,6 +8,9 @@
   time.timeZone = "America/New_York";
 
   nix.settings.allowed-users = [ "@wheel" ];
+  nix.settings.extra-sandbox-paths = [
+    "/nix/persist/secrets"
+  ];
 
   environment.persistence."/nix/persist" = {
     hideMounts = true;
@@ -27,6 +30,10 @@
   fileSystems."/etc/nixos".options = [ "noexec" ];
   fileSystems."/srv".options = [ "noexec" ];
   fileSystems."/var/log".options = [ "noexec" ];
+
+  environment.systemPackages = [
+    git  # needed to update flake in /etc/nixos
+  ];
 
   users.mutableUsers = false;
 }

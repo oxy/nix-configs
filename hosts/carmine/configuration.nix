@@ -8,8 +8,7 @@
       ../../crumbs/networkd.nix
       ../../crumbs/sshd.nix
 
-      ../../users/oxy/user.nix
-      ../../users/oxy/desktop.nix
+      ../../users/oxy.nix
 
       ./hardware-configuration.nix
     ];
@@ -22,10 +21,13 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
 
-  users.users.oxy.hashedPassword = lib.fileContents "${secrets}/carmine/oxy.pwd";
+  # passwordless machine
+  users.users.oxy.hashedPassword = "";
   users.users.root.openssh.authorizedKeys.keyFiles = [ 
     ../../pubkeys/oxy/scarlet.pub
   ];
+  security.sudo.wheelNeedsPassword = false;
+  services.xserver.displayManager.autoLogin.user = "oxy";
 
   # allow unfree packages
   nixpkgs.config.allowUnfree = true;
