@@ -14,7 +14,7 @@
       firefox
     ];
     openssh.authorizedKeys.keyFiles = [ 
-      ../../pubkeys/oxy/scarlet.pub
+      ../pubkeys/oxy/scarlet.pub
     ];
   };
 }
