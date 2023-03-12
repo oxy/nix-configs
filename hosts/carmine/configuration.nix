@@ -22,7 +22,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
 
-  users.users.oxy.hashedPassword = lib.fileContents ${secrets}/carmine/oxy.pwd;
+  users.users.oxy.hashedPassword = lib.fileContents "${secrets}/carmine/oxy.pwd";
   # allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
