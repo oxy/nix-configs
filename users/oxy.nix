@@ -1,16 +1,16 @@
-{ pkgs, lib, ... } :
+{ pkgs, lib, config, ... } :
 
 {
   users.users.oxy = {
     isNormalUser = true;
     description = "Lucy Satheesan";
     extraGroups = [ "wheel" ] 
-      ++ lib.optionals (networking.networkmanager.enable) [ "networkmanager" ]
+      ++ lib.optionals (config.networking.networkmanager.enable) [ "networkmanager" ]
     ;
     packages = with pkgs; [
       htop
       youtube-dl
-    ] ++ lib.optionals (services.xserver.enable) [
+    ] ++ lib.optionals (config.services.xserver.enable) [
       firefox
     ];
     openssh.authorizedKeys.keyFiles = [ 
