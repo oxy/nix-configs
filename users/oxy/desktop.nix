@@ -2,7 +2,7 @@
 
 {
   users.users.oxy = {
-    extra-groups = [ "networkmanager" ];
+    extraGroups = [ "networkmanager" ];
     packages = with pkgs; [
       firefox
     ];
