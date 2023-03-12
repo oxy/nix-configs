@@ -2,6 +2,12 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs";
   inputs.impermanence.url = "github:nix-community/impermanence";
 
+  # XXX: use this ONLY for hashed passwords
+  inputs.secrets = {
+    url = "github:oxy/nix-secrets";
+    flake = false;
+  };
+
   outputs = { self, nixpkgs, ... }@attrs : {
     # carmine: Parallels vm (desktop)
     nixosConfigurations.carmine = nixpkgs.lib.nixosSystem {

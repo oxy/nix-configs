@@ -1,4 +1,4 @@
-{ config, lib, pkgs, impermanence, ... }:
+{ config, lib, pkgs, impermanence, secrets, ... }:
 
 {
   imports = [
@@ -22,6 +22,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
 
+  users.users.oxy.hashedPassword = lib.fileContents ${secrets}/carmine/oxy.pwd;
   # allow unfree packages
   nixpkgs.config.allowUnfree = true;
 

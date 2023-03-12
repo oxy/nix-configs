@@ -8,6 +8,5 @@
     openssh.authorizedKeys.keyFiles = [ 
       ../../pubkeys/oxy/scarlet.pub
     ];
-    hashedPassword = lib.fileContents ../../secrets/oxy.pwd;
   };
 }
