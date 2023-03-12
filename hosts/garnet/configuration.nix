@@ -1,4 +1,4 @@
-{ config, lib, secrets, pkgs, impermanence, ... }:
+{ config, lib, pkgs, impermanence, ... }:
 
 {
 

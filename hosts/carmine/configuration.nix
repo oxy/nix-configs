@@ -1,9 +1,8 @@
-{ config, lib, pkgs, impermanence, secrets, ... }:
+{ config, lib, pkgs, impermanence, ... }:
 
 {
   imports = [
       ../../crumbs/base.nix
-      ../../crumbs/locale.nix
       ../../crumbs/desktop.nix
       ../../crumbs/networkd.nix
       ../../crumbs/sshd.nix

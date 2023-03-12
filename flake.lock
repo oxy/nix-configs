@@ -34,24 +34,7 @@
     "root": {
       "inputs": {
         "impermanence": "impermanence",
-        "nixpkgs": "nixpkgs",
-        "secrets": "secrets"
-      }
-    },
-    "secrets": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1678598354,
-        "narHash": "sha256-QVwDs43ocqQSO+dIYQowOLmdD+Sq3gOHd3fXTqnYDIk=",
-        "owner": "oxy",
-        "repo": "nix-secrets",
-        "rev": "6edcc8c6472939420719a86c37f2c4fade154895",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxy",
-        "repo": "nix-secrets",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },
