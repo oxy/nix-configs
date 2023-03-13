@@ -31,6 +31,7 @@
 
   environment.systemPackages = with pkgs; [
     git  # needed to update flake in /etc/nixos
+    glances
   ];
 
   # set locale to en_US
