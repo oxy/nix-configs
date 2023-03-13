@@ -5,7 +5,8 @@
       ../../crumbs/base.nix
       ../../crumbs/networkd.nix
       ../../crumbs/sshd.nix
-
+      ../../crumbs/samba.nix
+      
       ../../users/oxy.nix
 
       ./hardware-configuration.nix
@@ -25,20 +26,12 @@
     ../../pubkeys/oxy/scarlet.pub
   ];
 
-  # enable samba
-  services.samba.enable = true;
-  services.samba.openFirewall = true;
   services.samba.shares."movies" = {
     path = "/srv/nas/movies";
     writeable = "yes";
     browseable = "yes";
     public = "no";
   };
-
-  # enable wsdd
-  services.samba-wsdd.enable = true;
-  networking.firewall.allowedTCPPorts = [ 5357 ];
-  networking.firewall.allowedUDPPorts = [ 3702 ];
 
   # allow unfree packages
   nixpkgs.config.allowUnfree = true;
