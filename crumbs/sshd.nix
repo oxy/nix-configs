@@ -1,7 +1,7 @@
 { lib, config, ... }:
 {
   services.openssh = {
-    allowSFTP = false; # Don't set this if you need sftp
+    allowSFTP = true; # Don't set this if you need sftp
     extraConfig = ''
       AllowTcpForwarding yes
       AllowAgentForwarding no
