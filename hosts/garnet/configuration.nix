@@ -11,10 +11,16 @@
       ../../users/oxy.nix
 
       ./hardware-configuration.nix
+
+      # hacky way to hide network names from github
+      /nix/persist/secrets/wireless.nix
     ];
 
   # hostname
   networking.hostName = "garnet";
+
+  # wireless networking
+  networking.wireless.enable = true;
 
   # bootloader
   boot.loader.systemd-boot.enable = true;
