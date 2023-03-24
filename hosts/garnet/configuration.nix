@@ -6,6 +6,7 @@
       ../../crumbs/networkd.nix
       ../../crumbs/sshd.nix
       ../../crumbs/samba.nix
+      ../../crumbs/tailscale.nix
       
       ../../users/oxy.nix
 
