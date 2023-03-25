@@ -1,4 +1,4 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports = [ ];
@@ -37,6 +37,10 @@
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   services.thermald.enable = lib.mkDefault true;
   
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault true;
   hardware.video.hidpi.enable = lib.mkDefault true;
+  hardware.firmware = with pkgs; [
+    sof-firmware
+    linux-firmware
+  ];
 }
