@@ -40,6 +40,9 @@
     public = "no";
   };
 
+  # disable sleep on lid close when powered
+  services.logind.lidSwitchExternalPower = "ignore";
+
   # allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
