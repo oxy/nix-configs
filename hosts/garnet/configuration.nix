@@ -4,6 +4,7 @@
   imports = [
       ../../crumbs/base.nix
       ../../crumbs/networkd.nix
+      ../../crumbs/jellyfin.nix
       ../../crumbs/sshd.nix
       ../../crumbs/samba.nix
       ../../crumbs/tailscale.nix

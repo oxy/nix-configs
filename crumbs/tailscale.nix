@@ -9,4 +9,6 @@
 
   # make tailscale login persist across reboots
   environment.persistence."/nix/persist".directories = [ "/var/lib/tailscale" ];
+
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
 }
