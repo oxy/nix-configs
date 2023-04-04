@@ -1,4 +1,4 @@
-{ lib, config, ... } :
+{ lib, config, pkgs, ... } :
 
 {
   services.jellyfin.enable = true;
@@ -8,4 +8,7 @@
     "/var/cache/jellyfin"
   ];
 
+  systemd.services.jellyfin.path = with pkgs; [
+    jellyfin-ffmpeg
+  ];
 }
