@@ -3,5 +3,9 @@
 {
   services.jellyfin.enable = true;
 
-  # TODO: investigate jellyfin config store
+  environment.persistence."/nix/persist".directories = [
+    "/var/lib/jellyfin"
+    "/var/cache/jellyfin"
+  ];
+
 }
