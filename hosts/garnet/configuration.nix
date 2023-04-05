@@ -14,7 +14,7 @@
       ./hardware-configuration.nix
 
       # hacky way to hide network names from github
-      /nix/persist/secrets/wireless.nix
+      # /nix/persist/secrets/wireless.nix
     ];
 
   # hostname
