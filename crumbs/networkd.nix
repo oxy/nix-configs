@@ -17,7 +17,7 @@
       inherit networkConfig;
       dhcpV4Config.RouteMetric = 1024;
     };
-  } // lib.optionals (config.networking.wireless.enable) {
+  } // lib.optionalAttrs (config.networking.wireless.enable) {
     "40-wireless" = {
       enable = true;
       name = "wl*";
