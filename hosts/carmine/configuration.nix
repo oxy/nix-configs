@@ -3,10 +3,6 @@
 {
   imports = [
       ../../crumbs/base.nix
-      ../../crumbs/desktop.nix
-      ../../crumbs/networkd.nix
-      ../../crumbs/sshd.nix
-
       ../../users/oxy.nix
 
       ./hardware-configuration.nix
@@ -14,6 +10,11 @@
 
   # hostname
   networking.hostName = "carmine";
+
+  # services
+  services.openssh.enable = true;
+  services.xserver.enable = true;
+  services.transmission.enable = true;
 
   # bootloader
   boot.loader.systemd-boot.enable = true;

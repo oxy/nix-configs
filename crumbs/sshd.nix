@@ -19,8 +19,6 @@
   environment.persistence."/nix/persist".files =
     lib.concatMap (key: [ key.path (key.path + ".pub") ]) config.services.openssh.hostKeys;
 
-  services.openssh.enable = true;
-
   networking.firewall.allowedTCPPorts = [ 22 ];
   networking.firewall.allowedUDPPorts = [  ];
 }

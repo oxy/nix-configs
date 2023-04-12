@@ -2,7 +2,6 @@
 
 {
   # enable samba
-  services.samba.enable = true;
   services.samba.openFirewall = true;
 
   environment.persistence."/nix/persist".directories = [ "/var/lib/samba" ];
