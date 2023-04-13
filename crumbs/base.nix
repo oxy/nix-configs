@@ -56,7 +56,7 @@
 
       networking.firewall.enable = true;
       networking.nftables.enable = true;
-      networking.networkmanager.enable = lib.mkDefault false;
+      networking.networkmanager.enable = lib.mkOverride 999 false;
 
       # unit to create named network namespaces
       systemd.services."netns@" = {
@@ -176,10 +176,10 @@
     # if transmission is enabled, set up mullvad and transmission
     (lib.mkIf config.services.transmission.enable {
       # connect to mullvad
-      systemd.network.netdevs."10-wg0" = {
+      systemd.network.netdevs."10-mullvad" = {
         netdevConfig = {
           Kind = "wireguard";
-          Name = "wg0";
+          Name = "wgmullvad";
         };
         wireguardConfig = {
           ListenPort = 51820;
@@ -197,8 +197,8 @@
       };
 
       # set up default gateway / route
-      systemd.network.networks.wg0 = {
-        matchConfig.Name = "wg0";
+      systemd.network.networks.wgmullvad = {
+        matchConfig.Name = "wgmullvad";
         address = lib.mkDefault [
           "10.65.153.40/32"
           "fc00:bbbb:bbbb:bb01::2:9927/128"
@@ -208,6 +208,31 @@
         gateway = [ "10.64.0.1" ];
         networkConfig = {
           IPv6AcceptRA = false;
+        };
+      };
+
+      systemd.services."attach-vpn@" = {
+        description = "Attach to Mullvad VPN";
+        requires = [ "netns@%i.service" ];
+        after = [ "netns@%i.service" ];
+
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+
+          ExecStart = [
+            # associate NIC with netns
+            "${pkgs.iproute}/bin/ip link set wgmullvad netns %i"
+
+            # bring up NIC
+            "${pkgs.iproute}/bin/ip netns exec %i ${pkgs.iproute}/bin/ip link set up dev wgmullvad"
+            
+            # add address / gateway
+            "${pkgs.iproute}/bin/ip netns exec %i ${pkgs.iproute}/bin/ip addr add 10.65.153.40 broadcast 10.64.0.255 dev wgmullvad"
+            "${pkgs.iproute}/bin/ip netns exec %i ${pkgs.iproute}/bin/ip route add default via 10.64.0.1 dev wgmullvad"
+          ];
+
+          ExecStop = "${pkgs.iproute}/bin/ip netns exec %i ${pkgs.iproute}/bin/ip link set down dev wgmullvad";
         };
       };
 
