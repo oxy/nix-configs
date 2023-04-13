@@ -56,6 +56,25 @@
 
       networking.firewall.enable = true;
       networking.nftables.enable = true;
+      networking.networkmanager.enable = lib.mkDefault false;
+
+      # unit to create named network namespaces
+      systemd.services."netns@" = {
+        description = "Named network namespace %i";
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+
+          PrivateNetwork = true;
+          ExecStart = [
+            "${pkgs.iproute}/bin/ip netns add %i"
+            "${pkgs.util-linux}/bin/umount /var/run/netns/%i"
+            "${pkgs.util-linux}/bin/mount --bind /proc/self/ns/net /var/run/netns/%i"
+          ];
+
+          ExecStop = "${pkgs.iproute}/bin/ip netns del %i";
+        };
+      };
     }
 
     # if xserver is enabled, pull in gnome and set defaults
