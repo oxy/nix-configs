@@ -15,7 +15,13 @@
   # services
   services.openssh.enable = true;
   services.xserver.enable = true;
-  services.transmission.enable = true;
+
+  containers.transmission.bindMounts = {
+    "/var/lib/transmission/Downloads" = {
+      hostPath = "/nix/persist/transmission/downloads";
+      isReadOnly = false;
+    };
+  };
 
   # networking
   networking.nat.externalInterface = "enp0s5";

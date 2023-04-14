@@ -64,7 +64,6 @@
     (lib.mkIf (config.networking.nat.externalInterface != null) {
       networking.nat = {
         enable = true;
-        internalInterfaces = [ "ve-+" ];
         enableIPv6 = true;
       };
     })
