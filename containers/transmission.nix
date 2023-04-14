@@ -27,6 +27,7 @@
       {
         hostPort = 9091;
         containerPort = 9091;
+        protocol = "tcp";
       }
     ];
 
@@ -34,18 +35,20 @@
       services.mullvad-vpn.enable = true;
       services.transmission = {
         enable = true;
-        openRPCPort = true;
         openFirewall = true;
 
         settings = {
-          download-dir = "/var/lib/transmission/Downloads"; # TODO: change
+          download-dir = "/var/lib/transmission/Downloads";
+          rpc-bind-address = "192.168.111.11";
+          rpc-whitelist-enabled = false;
         };
       };
-      systemd.services."transmission-daemon".after = [ "mullvad-vpn.service" ];
+      systemd.services."transmission-daemon".requires = [ "mullvad-daemon.service" ];
 
       # networking
       networking.nftables.enable = true;
       networking.firewall.enable = true;
+      networking.firewall.trustedInterfaces = [ "eth0" ];
 
       # manually configure nameserver
       environment.etc."resolv.conf".text = "nameserver 8.8.8.8";
