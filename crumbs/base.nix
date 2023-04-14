@@ -21,6 +21,7 @@
         directories = [
           "/srv"
           "/var/log"
+          "/var/lib/nixos-containers"
         ];
         files = [
           "/etc/machine-id"
@@ -57,25 +58,16 @@
       networking.firewall.enable = true;
       networking.nftables.enable = true;
       networking.networkmanager.enable = lib.mkOverride 999 false;
-
-      # unit to create named network namespaces
-      systemd.services."netns@" = {
-        description = "Named network namespace %i";
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-
-          PrivateNetwork = true;
-          ExecStart = [
-            "${pkgs.iproute}/bin/ip netns add %i"
-            "${pkgs.util-linux}/bin/umount /var/run/netns/%i"
-            "${pkgs.util-linux}/bin/mount --bind /proc/self/ns/net /var/run/netns/%i"
-          ];
-
-          ExecStop = "${pkgs.iproute}/bin/ip netns del %i";
-        };
-      };
     }
+
+    # if networking.nat.externalInterface is set to something, enable NAT
+    (lib.mkIf (config.networking.nat.externalInterface != null) {
+      networking.nat = {
+        enable = true;
+        internalInterfaces = [ "ve-+" ];
+        enableIPv6 = true;
+      };
+    })
 
     # if xserver is enabled, pull in gnome and set defaults
     (lib.mkIf config.services.xserver.enable {
@@ -171,16 +163,6 @@
       environment.systemPackages = [ pkgs.tailscale ];
       environment.persistence."/nix/persist".directories = [ "/var/lib/tailscale" ];
       networking.firewall.trustedInterfaces = [ "tailscale0" ];
-    })
-
-    # if transmission is enabled, set up mullvad and transmission
-    (lib.mkIf config.services.transmission.enable {
-      services.mullvad-vpn.enable = true;
-      systemd.services."mullvad-daemon" = {
-        unitConfig = {
-          JoinsNamespaceOf = "netns@transmission.service";
-        };
-      };
     })
 
     # set up networkd if we aren't using networkmanager

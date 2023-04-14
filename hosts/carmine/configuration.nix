@@ -3,6 +3,7 @@
 {
   imports = [
       ../../crumbs/base.nix
+      ../../containers/transmission.nix
       ../../users/oxy.nix
 
       ./hardware-configuration.nix
@@ -15,6 +16,9 @@
   services.openssh.enable = true;
   services.xserver.enable = true;
   services.transmission.enable = true;
+
+  # networking
+  networking.nat.externalInterface = "enp0s5";
 
   # bootloader
   boot.loader.systemd-boot.enable = true;
