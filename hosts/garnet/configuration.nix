@@ -3,22 +3,26 @@
 {
   imports = [
       ../../crumbs/base.nix
-      ../../crumbs/networkd.nix
-      ../../crumbs/jellyfin.nix
-      ../../crumbs/sshd.nix
-      ../../crumbs/samba.nix
-      ../../crumbs/tailscale.nix
-      
+      ../../containers/transmission.nix
       ../../users/oxy.nix
 
       ./hardware-configuration.nix
-
-      # hacky way to hide network names from github
-      # /nix/persist/secrets/wireless.nix
     ];
 
   # hostname
   networking.hostName = "garnet";
+
+  # services
+  services.openssh.enable = true;
+  services.jellyfin.enable = true;
+  services.tailscale.enable = true;
+
+  # create a movies group for jellyfin/transmission/...
+  users.groups.movies.members = [
+    "oxy"
+    "jellyfin"
+    "transmission"
+  ];
 
   # wireless networking
   networking.wireless.enable = true;
@@ -34,6 +38,8 @@
     ../../pubkeys/oxy/scarlet.pub
   ];
 
+  # set up samba
+  services.samba.enable = true;
   services.samba.shares."movies" = {
     path = "/srv/nas/movies";
     writeable = "yes";

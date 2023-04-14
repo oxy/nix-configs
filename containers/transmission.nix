@@ -14,6 +14,14 @@
   #   };
   # };
 
+  users.users."transmission" = {
+    name = "Transmission";
+    description = "Transmission account for container permission management";
+    isSystemUser = true;
+    createHome = false;
+    uid = 100;
+  };
+
   # enable nat for the container
   networking.nat.internalInterfaces = [ "ve-transmission" ];
 
@@ -43,6 +51,8 @@
           rpc-whitelist-enabled = false;
         };
       };
+
+      users.users."transmission".uid = 100;
       systemd.services."transmission-daemon".requires = [ "mullvad-daemon.service" ];
 
       # networking
