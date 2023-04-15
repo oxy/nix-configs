@@ -55,18 +55,14 @@
 
       users.mutableUsers = false;
 
-      networking.firewall.enable = true;
-      networking.nftables.enable = true;
-      networking.networkmanager.enable = lib.mkOverride 999 false;
-    }
-
-    # if networking.nat.externalInterface is set to something, enable NAT
-    (lib.mkIf (config.networking.nat.externalInterface != null) {
-      networking.nat = {
-        enable = true;
-        enableIPv6 = true;
+      networking = {
+        firewall.enable = true;
+        nftables.enable = true;
+        networkmanager.enable = lib.mkOverride 999 false;
+        useDHCP = false;
+        useNetworkd = true;
       };
-    })
+    }
 
     # if xserver is enabled, pull in gnome and set defaults
     (lib.mkIf config.services.xserver.enable {
@@ -166,12 +162,6 @@
 
     # set up networkd if we aren't using networkmanager
     (lib.mkIf (!config.networking.networkmanager.enable) {
-      # networking
-      networking = {
-        useDHCP = false;
-        useNetworkd = true;
-      };
-
       systemd.network.networks = let
       networkConfig = {
         DHCP = "yes";

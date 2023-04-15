@@ -1,4 +1,4 @@
-{ ... } : {
+{ config, ... } : {
   # transmission container!
   # some configuration required:
   # 
@@ -15,22 +15,22 @@
   # };
 
   users.users."transmission" = {
-    name = "Transmission";
     description = "Transmission account for container permission management";
     isSystemUser = true;
     createHome = false;
-    uid = 100;
+    uid = config.containers.transmission.config.users.users."transmission".uid;
   };
 
-  # enable nat for the container
-  networking.nat.internalInterfaces = [ "ve-transmission" ];
+  # systemd-networkd DNS configuration
+  networking.firewall.interfaces."ve-transmission" = {
+    allowedUDPPorts = [ 67 ];
+  };
 
   # container for transmission
   containers.transmission = {
     autoStart = true;
     privateNetwork = true;
-    hostAddress = "192.168.111.10";
-    localAddress = "192.168.111.11";
+    extraFlags = [ "--network-veth" ];
     forwardPorts = [
       {
         hostPort = 9091;
@@ -47,21 +47,30 @@
 
         settings = {
           download-dir = "/var/lib/transmission/Downloads";
-          rpc-bind-address = "192.168.111.11";
+          rpc-bind-address = "0.0.0.0";
           rpc-whitelist-enabled = false;
         };
       };
 
-      users.users."transmission".uid = 100;
+      users.users."transmission".uid = 70;
       systemd.services."transmission-daemon".requires = [ "mullvad-daemon.service" ];
 
       # networking
       networking.nftables.enable = true;
       networking.firewall.enable = true;
-      networking.firewall.trustedInterfaces = [ "eth0" ];
+      networking.firewall.trustedInterfaces = [ "host0" ];
+      networking.useHostResolvConf = false;
+      networking.useNetworkd = true;
 
-      # manually configure nameserver
-      environment.etc."resolv.conf".text = "nameserver 8.8.8.8";
+      # manually configure wireguard
+      environment.etc."wireguard/wgvpn.conf" = {
+        source = "/nix/secrets/wireguard.conf";
+        mode = "0600";
+      };
+
+      # add wireguard interface
+      environment.systemPackages = with pkgs; [ wireguard-tools ];
+      systemd.services."wg-quick@wgvpn".enable = true;
 
       system.stateVersion = "23.05";
     };

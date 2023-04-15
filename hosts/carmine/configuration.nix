@@ -23,9 +23,6 @@
     };
   };
 
-  # networking
-  networking.nat.externalInterface = "enp0s5";
-
   # bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
