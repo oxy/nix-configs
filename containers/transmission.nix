@@ -1,9 +1,9 @@
-{ config, ... } : {
+{ config, lib, ... } : {
   # transmission container!
   # some configuration required:
   # 
-  # 1. requires NAT enabled
-  # 2. requires manual setup for mullvad
+  # 1. assumes networkd is used (on my machines, yes)
+  # 2. assumes wireguard vpn (config stored in /nix/secrets/wireguard/wgvpn.conf)
   # 3. requires bind mount for Downloads
   #
   # for bind mount, use:
@@ -19,6 +19,11 @@
     isSystemUser = true;
     createHome = false;
     uid = config.containers.transmission.config.users.users."transmission".uid;
+    group = "transmission";
+  };
+
+  users.groups."transmission" = {
+    gid = config.containers.transmission.config.users.groups."transmission".gid;
   };
 
   # systemd-networkd DNS configuration
@@ -39,8 +44,14 @@
       }
     ];
 
+    bindMounts = {
+      "/etc/wireguard" = {
+        hostPath = lib.mkDefault "/nix/secrets/wireguard";
+        isReadOnly = false;
+      };
+    };
+
     config = { config, pkgs, ... }: {
-      services.mullvad-vpn.enable = true;
       services.transmission = {
         enable = true;
         openFirewall = true;
@@ -52,8 +63,7 @@
         };
       };
 
-      users.users."transmission".uid = 70;
-      systemd.services."transmission-daemon".requires = [ "mullvad-daemon.service" ];
+      systemd.services."transmission-daemon".requires = [ "wg-vpn.service" ];
 
       # networking
       networking.nftables.enable = true;
@@ -62,15 +72,21 @@
       networking.useHostResolvConf = false;
       networking.useNetworkd = true;
 
-      # manually configure wireguard
-      environment.etc."wireguard/wgvpn.conf" = {
-        source = "/nix/secrets/wireguard.conf";
-        mode = "0600";
-      };
-
       # add wireguard interface
       environment.systemPackages = with pkgs; [ wireguard-tools ];
-      systemd.services."wg-quick@wgvpn".enable = true;
+      systemd.services."wg-vpn" = {
+        enable = true;
+        description = "Wireguard VPN";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network-online.target" ];
+        path = with pkgs; [ wireguard-tools ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = "${pkgs.wireguard-tools}/bin/wg-quick up wgvpn";
+          ExecStop = "${pkgs.wireguard-tools}/bin/wg-quick down wgvpn";
+        };
+      };
 
       system.stateVersion = "23.05";
     };
