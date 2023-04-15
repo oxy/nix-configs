@@ -46,7 +46,7 @@
 
     bindMounts = {
       "/etc/wireguard" = {
-        hostPath = lib.mkDefault "/nix/secrets/wireguard";
+        hostPath = lib.mkDefault "/nix/persist/secrets/wireguard";
         isReadOnly = false;
       };
     };

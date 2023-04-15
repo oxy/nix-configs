@@ -38,6 +38,11 @@
     ../../pubkeys/oxy/scarlet.pub
   ];
 
+  # set up a movies group
+  users.groups.movies = {
+    members = [ "oxy" "jellyfin" "transmission" ];
+  };
+
   # set up samba
   services.samba.enable = true;
   services.samba.shares."movies" = {
@@ -45,6 +50,14 @@
     writeable = "yes";
     browseable = "yes";
     public = "no";
+  };
+
+  # set up transmission
+  containers.transmission.bindMounts = {
+    "/var/lib/transmission/Downloads" = {
+      hostPath = "/srv/nas/movies";
+      isReadOnly = false;
+    };
   };
 
   # disable sleep on lid close when powered
