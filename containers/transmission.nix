@@ -1,9 +1,9 @@
-{ ... } : {
+{ config, lib, ... } : {
   # transmission container!
   # some configuration required:
   # 
-  # 1. requires NAT enabled
-  # 2. requires manual setup for mullvad
+  # 1. assumes networkd is used (on my machines, yes)
+  # 2. assumes wireguard vpn (config stored in /nix/secrets/wireguard/wgvpn.conf)
   # 3. requires bind mount for Downloads
   #
   # for bind mount, use:
@@ -15,22 +15,27 @@
   # };
 
   users.users."transmission" = {
-    name = "Transmission";
     description = "Transmission account for container permission management";
     isSystemUser = true;
     createHome = false;
-    uid = 100;
+    uid = config.containers.transmission.config.users.users."transmission".uid;
+    group = "transmission";
   };
 
-  # enable nat for the container
-  networking.nat.internalInterfaces = [ "ve-transmission" ];
+  users.groups."transmission" = {
+    gid = config.containers.transmission.config.users.groups."transmission".gid;
+  };
+
+  # systemd-networkd DNS configuration
+  networking.firewall.interfaces."ve-transmission" = {
+    allowedUDPPorts = [ 67 ];
+  };
 
   # container for transmission
   containers.transmission = {
     autoStart = true;
     privateNetwork = true;
-    hostAddress = "192.168.111.10";
-    localAddress = "192.168.111.11";
+    extraFlags = [ "--network-veth" ];
     forwardPorts = [
       {
         hostPort = 9091;
@@ -39,29 +44,49 @@
       }
     ];
 
+    bindMounts = {
+      "/etc/wireguard" = {
+        hostPath = lib.mkDefault "/nix/persist/secrets/wireguard";
+        isReadOnly = false;
+      };
+    };
+
     config = { config, pkgs, ... }: {
-      services.mullvad-vpn.enable = true;
       services.transmission = {
         enable = true;
         openFirewall = true;
 
         settings = {
           download-dir = "/var/lib/transmission/Downloads";
-          rpc-bind-address = "192.168.111.11";
+          rpc-bind-address = "0.0.0.0";
           rpc-whitelist-enabled = false;
         };
       };
 
-      users.users."transmission".uid = 100;
-      systemd.services."transmission-daemon".requires = [ "mullvad-daemon.service" ];
+      systemd.services."transmission-daemon".requires = [ "wg-vpn.service" ];
 
       # networking
       networking.nftables.enable = true;
       networking.firewall.enable = true;
-      networking.firewall.trustedInterfaces = [ "eth0" ];
+      networking.firewall.trustedInterfaces = [ "host0" ];
+      networking.useHostResolvConf = false;
+      networking.useNetworkd = true;
 
-      # manually configure nameserver
-      environment.etc."resolv.conf".text = "nameserver 8.8.8.8";
+      # add wireguard interface
+      environment.systemPackages = with pkgs; [ wireguard-tools ];
+      systemd.services."wg-vpn" = {
+        enable = true;
+        description = "Wireguard VPN";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network-online.target" ];
+        path = with pkgs; [ wireguard-tools ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = "${pkgs.wireguard-tools}/bin/wg-quick up wgvpn";
+          ExecStop = "${pkgs.wireguard-tools}/bin/wg-quick down wgvpn";
+        };
+      };
 
       system.stateVersion = "23.05";
     };

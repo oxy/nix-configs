@@ -47,6 +47,14 @@
     public = "no";
   };
 
+  # set up transmission
+  containers.transmission.bindMounts = {
+    "/var/lib/transmission/Downloads" = {
+      hostPath = "/srv/nas/movies";
+      isReadOnly = false;
+    };
+  };
+
   # disable sleep on lid close when powered
   services.logind.lidSwitchExternalPower = "ignore";
 

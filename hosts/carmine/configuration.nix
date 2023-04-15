@@ -3,7 +3,6 @@
 {
   imports = [
       ../../crumbs/base.nix
-      ../../containers/transmission.nix
       ../../users/oxy.nix
 
       ./hardware-configuration.nix
@@ -15,16 +14,6 @@
   # services
   services.openssh.enable = true;
   services.xserver.enable = true;
-
-  containers.transmission.bindMounts = {
-    "/var/lib/transmission/Downloads" = {
-      hostPath = "/nix/persist/transmission/downloads";
-      isReadOnly = false;
-    };
-  };
-
-  # networking
-  networking.nat.externalInterface = "enp0s5";
 
   # bootloader
   boot.loader.systemd-boot.enable = true;
