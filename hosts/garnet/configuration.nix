@@ -33,6 +33,8 @@
   boot.loader.efi.efiSysMountPoint = "/boot";
 
   # store password in global location
+  # XXX: currently broken on nixos-unstable
+  users.allowNoPasswordLogin = true;
   users.users.oxy.passwordFile = "/nix/persist/secrets/oxy.passwd";
   users.users.root.openssh.authorizedKeys.keyFiles = [ 
     ../../pubkeys/oxy/scarlet.pub
