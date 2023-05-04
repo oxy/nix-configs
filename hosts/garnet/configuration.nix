@@ -55,11 +55,11 @@
     };
   };
 
-  containers.transmission.config.users.users."transmission".uid = 
-    config.users.users."jellyfin".uid;
+  containers.transmission.config.services.transmission.settings.peer-port = 55828;
 
-  containers.transmission.config.users.groups."transmission".gid =
-    config.users.groups."movies".gid;
+  # XXX: transmission has a fixed uid/gid right now, steal it for jellyfin/movies
+  users.users."jellyfin".uid = config.containers.transmission.config.users.users."transmission".uid;
+  users.groups."movies".gid = config.containers.transmission.config.users.groups."transmission".gid;
 
   # disable sleep on lid close when powered
   services.logind.lidSwitchExternalPower = "ignore";
