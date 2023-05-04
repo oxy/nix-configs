@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 
 {
   imports = [
@@ -54,6 +54,12 @@
       isReadOnly = false;
     };
   };
+
+  containers.transmission.config.users.users."transmission".uid = 
+    config.users.users."jellyfin".uid;
+
+  containers.transmission.config.users.users."transmission".gid =
+    config.users.groups."movies".gid;
 
   # disable sleep on lid close when powered
   services.logind.lidSwitchExternalPower = "ignore";

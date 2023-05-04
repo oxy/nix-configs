@@ -13,18 +13,10 @@
   #     isReadOnly = false;
   #   };
   # };
-
-  users.users."transmission" = {
-    description = "Transmission account for container permission management";
-    isSystemUser = true;
-    createHome = false;
-    uid = config.containers.transmission.config.users.users."transmission".uid;
-    group = "transmission";
-  };
-
-  users.groups."transmission" = {
-    gid = config.containers.transmission.config.users.groups."transmission".gid;
-  };
+  # also, configure user account "sharing"
+  # containers.transmission.config.users.users."transmission".uid = 
+  #  config.users.users."jellyfin".uid; // for example
+  # and repeat this for the group
 
   # systemd-networkd DNS configuration
   networking.firewall.interfaces."ve-transmission" = {
@@ -63,6 +55,7 @@
         };
       };
 
+      users.mutableUsers = false;
       systemd.services."transmission-daemon".requires = [ "wg-vpn.service" ];
 
       # networking
